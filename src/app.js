@@ -73,7 +73,7 @@ app.use('/wechat', wechat(config, function (req, res, next) {
         url: 'http://nodeapi.cloudfoundry.com/'
       }
       ]);
-    })；
+    });
 
     apiaiRequest.on('error', (error) => console.error(error));
     apiaiRequest.end();
