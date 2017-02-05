@@ -16,6 +16,10 @@ var config = {
   encodingAESKey: 'y9zUzvXPb78IsoPVMXoVXUmVs6C9JuyUDEQzAIwBypO'
 };
 
+const APIAI_ACCESS_TOKEN = 'a6b6b7d1db4f4a999bd5f7f862aa80ae';
+const apiai = require("../module/apiai");
+const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: 'en', requestSource: "fb"});
+
 app.use(express.query());
 app.get('/', function (req, res) {
   console.log(req);
@@ -48,8 +52,20 @@ app.use('/wechat', wechat(config, function (req, res, next) {
       }
     });
   } else {
-    // 回复高富帅(图文回复)
-    res.reply([
+    var text = message.Content;
+    console.log(message.Content);
+    let apiaiRequest = apiAiService.textRequest(text,
+    {
+      sessionId: message.FromUserName
+    })
+
+    apiaiRequest.on('response', function(response)
+    {
+      let responseText = response.result.fulfillment.speech;
+      let responseData = response.result.fulfillment.data;
+      let action = response.result.action;
+      console.log('Response Text: ', responseText);
+      res.reply([
       {
         title: '你来我家接我吧',
         description: '这是女神与高富帅之间的对话',
@@ -57,6 +73,8 @@ app.use('/wechat', wechat(config, function (req, res, next) {
         url: 'http://nodeapi.cloudfoundry.com/'
       }
     ]);
+    })
+    // 回复高富帅(图文回复)
   }
 }));
 
