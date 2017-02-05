@@ -1,10 +1,18 @@
-var express = require('express');
-var app = express();
-var wechat = require('wechat');
-var config = {
-  token: '1234',
-  appid: 'wx02e61a6df898cf28',
-  encodingAESKey: 'UnIf7MbzbmvxPs5VhzJSROKNDzIL5WkAftirbKJnqEt'
+'use strict'
+
+const express = require('express');
+const app = express();
+const wechat = require('wechat');
+
+const REST_PORT = (process.env.PORT || 5000);
+const We_VERIFY_TOKEN = process.env.We_VERIFY_TOKEN;
+const We_APP_ID = process.env.We_APP_ID;
+const We_ENCODINGAES_KEY = process.env.We_ENCODINGAES_KEY
+
+const config = {
+  token: We_VERIFY_TOKEN,
+  appid: We_APP_ID,
+  encodingAESKey: We_ENCODINGAES_KEY
 };
 
 app.use(express.query());
@@ -46,6 +54,6 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   }
 }));
 
-app.listen(443, () => {
+app.listen(REST_PORT, () => {
     console.log('Rest service ready on port ' + REST_PORT);
 });

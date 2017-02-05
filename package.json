@@ -10,6 +10,7 @@
   "author": "Danil Skachkov <danil.skachkov@speaktoit.com> (https://api.ai)",
   "license": "ISC",
   "dependencies": {
+    "wechat": "2.0.3",
     "apiai": "2.0.5",
     "async": "^2.0.0",
     "body-parser": "^1.15.2",
