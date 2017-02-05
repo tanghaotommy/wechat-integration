@@ -65,14 +65,15 @@ app.use('/wechat', wechat(config, function (req, res, next) {
       let responseData = response.result.fulfillment.data;
       let action = response.result.action;
       console.log('Response Text: ', responseText);
-      res.reply([
-      {
-        title: '你来我家接我吧',
-        description: '这是女神与高富帅之间的对话',
-        picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
-        url: 'http://nodeapi.cloudfoundry.com/'
-      }
-      ]);
+      res.reply(responseText);
+      // res.reply([
+      // {
+      //   title: '你来我家接我吧',
+      //   description: '这是女神与高富帅之间的对话',
+      //   picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
+      //   url: 'http://nodeapi.cloudfoundry.com/'
+      // }
+      // ]);
     });
 
     apiaiRequest.on('error', (error) => console.error(error));
