@@ -72,8 +72,11 @@ app.use('/wechat', wechat(config, function (req, res, next) {
         picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
         url: 'http://nodeapi.cloudfoundry.com/'
       }
-    ]);
-    })
+      ]);
+    })；
+
+    apiaiRequest.on('error', (error) => console.error(error));
+    apiaiRequest.end();
     // 回复高富帅(图文回复)
   }
 }));
