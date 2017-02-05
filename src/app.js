@@ -1,24 +1,30 @@
-'use strict'
 
-const express = require('express');
-const app = express();
-const wechat = require('wechat');
+var app = require('express')();
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('./path/to/private.pem', 'utf8');
+var certificate = fs.readFileSync('./path/to/file.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 
-const REST_PORT = (process.env.PORT || 5000);
-const We_VERIFY_TOKEN = process.env.We_VERIFY_TOKEN;
-const We_APP_ID = process.env.We_APP_ID;
-const We_ENCODINGAES_KEY = process.env.We_ENCODINGAES_KEY
-
-const config = {
-  token: We_VERIFY_TOKEN,
-  appid: We_APP_ID,
-  encodingAESKey: We_ENCODINGAES_KEY
+var express = require('express');
+var app = express();
+var wechat = require('wechat');
+var config = {
+  token: '1234',
+  appid: 'wx02e61a6df898cf28',
+  encodingAESKey: 'y9zUzvXPb78IsoPVMXoVXUmVs6C9JuyUDEQzAIwBypO'
 };
 
 app.use(express.query());
+app.get('/', function (req, res) {
+  console.log(req);
+});
 app.use('/wechat', wechat(config, function (req, res, next) {
   // 微信输入信息都在req.weixin上
+  //console.log(req);
   var message = req.weixin;
+  //res.reply("hehe");
   console.log(message);
   if (message.FromUserName === 'diaosi') {
     // 回复屌丝(普通回复)
@@ -54,6 +60,12 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   }
 }));
 
-app.listen(REST_PORT, () => {
-    console.log('Rest service ready on port ' + REST_PORT);
+//app.listen(80, () => {
+//    console.log('Rest service ready on port ' + 443);
+//});
+//var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+var SSLPORT = 443;
+httpsServer.listen(SSLPORT, function() {
+    console.log('HTTPS Server is running on: https://localhost:%s', SSLPORT);
 });
