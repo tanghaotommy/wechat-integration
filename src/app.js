@@ -34,62 +34,86 @@ app.use('/wechat', wechat(config, function (req, res, next) {
       console.log('location message: ', message.Label);   
       var longitude = message.Location_Y;
       var latitude = message.Location_X
-
-      var postData = querystring.stringify({
-        sessionId: message.FromUserName,
-        longitude: longitude,
-        latitude: latitude
+      var text = String(latitude) + ' ' + String(longitude)
+      let apiaiRequest = apiAiService.textRequest(text,
+      {
+        sessionId: message.FromUserName
       });
 
-      var options = {
-        hostname: 'localhost',
-        port: 5000,
-        path: '/check_location',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(postData)
-        }
-      };
-
-      var req = http.request(options, (response) => {
-        var str = ''
-        console.log(`STATUS: ${response.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
-        response.setEncoding('utf8');
-        response.on('data', (chunk) => {
-          console.log(`BODY: ${chunk}`);
-          str += chunk
+      apiaiRequest.on('response', function(response)
+      {
+        let responseText = response.result.fulfillment.speech;
+        let responseData = response.result.fulfillment.data;
+        let action = response.result.action;
+        console.log('Response Text: ', responseText);
+        res.reply(responseText);
+        // res.reply([
+        // {
+        //   title: '你来我家接我吧',
+        //   description: '这是女神与高富帅之间的对话',
+        //   picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
+        //   url: 'http://nodeapi.cloudfoundry.com/'
+        // }
+        // ]);
         });
-        response.on('end', () => {
-          var results = JSON.parse(str)
-          res.reply(results.speech)
-          console.log('No more data in response.');
 
-          let apiaiRequest = apiAiService.contextsRequest(results.contextOut, {
-              sessionId: sender
-          });
+        apiaiRequest.on('error', (error) => console.error(error));
+        apiaiRequest.end();
+      // var postData = querystring.stringify({
+      //   sessionId: message.FromUserName,
+      //   longitude: longitude,
+      //   latitude: latitude
+      // });
 
-          console.log('Happened something!')
+      // var options = {
+      //   hostname: 'localhost',
+      //   port: 5000,
+      //   path: '/check_location',
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Content-Length': Buffer.byteLength(postData)
+      //   }
+      // };
 
-          apiaiRequest.on('response', (response) => {
-              console.log('Response from context setting', response.toString())
-          });
+      // var req = http.request(options, (response) => {
+      //   var str = ''
+      //   console.log(`STATUS: ${response.statusCode}`);
+      //   console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+      //   response.setEncoding('utf8');
+      //   response.on('data', (chunk) => {
+      //     console.log(`BODY: ${chunk}`);
+      //     str += chunk
+      //   });
+      //   response.on('end', () => {
+      //     var results = JSON.parse(str)
+      //     res.reply(results.speech)
+      //     console.log('No more data in response.');
 
-          apiaiRequest.on('error', (error) => console.error(error));
+      //     let apiaiRequest = apiAiService.contextsRequest(results.contextOut, {
+      //         sessionId: sender
+      //     });
 
-          apiaiRequest.end();
+      //     console.log('Happened something!')
 
-        });
-      });
+      //     apiaiRequest.on('response', (response) => {
+      //         console.log('Response from context setting', response.toString())
+      //     });
 
-      req.on('error', (e) => {
-        console.log(`problem with request: ${e.message}`);
-      });
+      //     apiaiRequest.on('error', (error) => console.error(error));
 
-      // write data to request body
-      req.write(postData);
-      req.end();
+      //     apiaiRequest.end();
+
+      //   });
+      // });
+
+      // req.on('error', (e) => {
+      //   console.log(`problem with request: ${e.message}`);
+      // });
+
+      // // write data to request body
+      // req.write(postData);
+      // req.end();
   }
   if (message.MsgType == 'text') {
     var text = message.Content;
