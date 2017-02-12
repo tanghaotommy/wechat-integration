@@ -32,6 +32,64 @@ app.use('/wechat', wechat(config, function (req, res, next) {
   console.log(message);
   if (message.MsgType == 'location') {
       console.log('location message: ', message.Label);   
+      var longitude = message.Location_Y;
+      var latitude = message.Location_X
+
+      var postData = querystring.stringify({
+        sessionId: message.FromUserName,
+        longitude: longitude,
+        latitude: latitude
+      });
+
+      var options = {
+        hostname: 'localhost',
+        port: 5000,
+        path: '/check_location',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(postData)
+        }
+      };
+
+      var req = http.request(options, (response) => {
+        var str = ''
+        console.log(`STATUS: ${response.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+        response.setEncoding('utf8');
+        response.on('data', (chunk) => {
+          console.log(`BODY: ${chunk}`);
+          str += chunk
+        });
+        response.on('end', () => {
+          var results = JSON.parse(str)
+          res.reply(results.speech)
+          console.log('No more data in response.');
+
+          let apiaiRequest = apiAiService.contextsRequest(results.contextOut, {
+              sessionId: sender
+          });
+
+          console.log('Happened something!')
+
+          apiaiRequest.on('response', (response) => {
+              console.log('Response from context setting', response.toString())
+          });
+
+          apiaiRequest.on('error', (error) => console.error(error));
+
+          apiaiRequest.end();
+
+        });
+      });
+
+      req.on('error', (e) => {
+        console.log(`problem with request: ${e.message}`);
+      });
+
+      // write data to request body
+      req.write(postData);
+      req.end();
   }
   if (message.MsgType == 'text') {
     var text = message.Content;
