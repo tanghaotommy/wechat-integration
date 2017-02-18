@@ -254,6 +254,35 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       res.reply(responseText);
     }
   }
+  if (message.MsgType == 'voice') {
+    var text = message.Recognition;
+    console.log('voice message: ', text);
+    let apiaiRequest = apiAiService.textRequest(text,
+    {
+      sessionId: message.FromUserName
+    });
+
+    apiaiRequest.on('response', function(response)
+    {
+      let responseText = response.result.fulfillment.speech;
+      let responseData = response.result.fulfillment.data;
+      let action = response.result.action;
+      console.log('Response Text: ', responseText);
+      res.reply(responseText);
+      // res.reply([
+      // {
+      //   title: '你来我家接我吧',
+      //   description: '这是女神与高富帅之间的对话',
+      //   picurl: 'http://nodeapi.cloudfoundry.com/qrcode.jpg',
+      //   url: 'http://nodeapi.cloudfoundry.com/'
+      // }
+      // ]);
+      });
+
+      apiaiRequest.on('error', (error) => console.error(error));
+      apiaiRequest.end();
+  }
+
   if (message.MsgType == 'text') {
     var text = message.Content;
     console.log('text message: ', message.Content);
