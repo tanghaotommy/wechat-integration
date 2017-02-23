@@ -264,7 +264,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
 
       var options = {
         hostname: '54.183.198.179',
-        port: 443,
+        port: 5000,
         path: '/user_location',
         method: 'POST',
         headers: {
