@@ -260,6 +260,8 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       "longitude": message.Longitude
       }
 
+      var postData = JSON.stringify(data);
+
       var options = {
         hostname: '54.183.198.179',
         port: 443,
@@ -273,7 +275,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
 
       console.log("Location data: ", data)
       res.reply("")
-      var req = https.request(options, (res) => {
+      var req = http.request(options, (res) => {
         console.log(`STATUS: ${res.statusCode}`);
         console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
         res.setEncoding('utf8');
