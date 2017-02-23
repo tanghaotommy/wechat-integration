@@ -260,6 +260,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       "longitude": message.Longitude
       }
       console.log("Location data: ", data)
+      res.reply("success")
     }
   }
   if (message.MsgType == 'voice') {
