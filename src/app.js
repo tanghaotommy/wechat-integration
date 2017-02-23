@@ -259,8 +259,65 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       "latitude": message.Latitude,
       "longitude": message.Longitude
       }
+
+      var options = {
+        hostname: '54.183.198.179',
+        port: 443,
+        path: '/user_location',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(postData)
+        }
+      };
+
       console.log("Location data: ", data)
-      res.reply("success")
+      res.reply("")
+      var req = https.request(options, (res) => {
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          console.log(`BODY: ${chunk}`);
+          var status = JSON.parse(chunk).Status;
+          console.log('Status', status);
+          if (status == 0) {
+              let apiaiRequest = apiAiService.contextsRequest({
+                'name' : 'user_send_photo',
+                'lifespan' : 2
+              }, {
+                  sessionId: sender
+              });
+
+              console.log('Happened something!')
+
+              apiaiRequest.on('response', (response) => {
+                  console.log('Response from context setting', response.toString())
+              });
+
+              apiaiRequest.on('error', (error) => console.error(error));
+
+              apiaiRequest.end();
+
+              var textPart = "Oh, what do you want to do with this photo?"
+              sendFBMessage(sender, {text: textPart});
+          };
+        });
+        res.on('end', () => {
+          console.log('No more data in response.');
+        });
+      });
+
+      req.on('error', (e) => {
+        console.log(`problem with request: ${e.message}`);
+      });
+
+      // write data to request body
+      req.write(postData);
+      req.end();
+    }
+    if (message.Event == 'unsubscribe') {
+      res.reply("")
     }
   }
   if (message.MsgType == 'voice') {
