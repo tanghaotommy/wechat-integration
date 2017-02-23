@@ -253,6 +253,14 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       responseText = "Hi，我是智能机器人，你的餐馆推荐小助手。目前可以根据你的喜好为你推荐南加州的中餐馆！\n你可以这样问我：有什么推荐的中餐馆？";
       res.reply(responseText);
     }
+    if (message.Event == 'LOCATION') {
+      data = {"user_id": message.FromUserName,
+      "event": "location",
+      "latitude": message.Latitude,
+      "longitude": message.Longitude
+      }
+      console.log("Location data: ", data)
+    }
   }
   if (message.MsgType == 'voice') {
     var text = message.Recognition;
