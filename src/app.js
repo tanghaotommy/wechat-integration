@@ -274,7 +274,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       };
 
       console.log("Location data: ", data)
-      res.reply("")
+      res.reply()
       var req = http.request(options, (res) => {
         console.log(`STATUS: ${res.statusCode}`);
         console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -319,7 +319,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       req.end();
     }
     if (message.Event == 'unsubscribe') {
-      res.reply("")
+      res.reply()
     }
   }
   if (message.MsgType == 'voice') {
