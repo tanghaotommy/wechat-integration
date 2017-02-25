@@ -370,9 +370,9 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       let responseData = response.result.fulfillment.data;
       let action = response.result.action;
       if (isDefined(responseData) && isDefined(responseData.wechat)) {
-        console.log('Response Data: ', responseData.wechat)
-        reply(responseData.wechat)
-        return
+        console.log('Response Data: ', responseData.wechat);
+        reply(responseData.wechat);
+        return;
       }
       console.log('Response Text: ', responseText);
       if (action == "input.unknown") {
