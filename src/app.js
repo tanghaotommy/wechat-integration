@@ -335,6 +335,11 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       let responseText = response.result.fulfillment.speech;
       let responseData = response.result.fulfillment.data;
       let action = response.result.action;
+      if (isDefined(responseData) && isDefined(responseData.wechat)) {
+        console.log('Response Data: ', responseData)
+        reply(responseData)
+        return
+      }
       console.log('Response Text: ', responseText);
       res.reply(responseText);
       // res.reply([
@@ -364,6 +369,11 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       let responseText = response.result.fulfillment.speech;
       let responseData = response.result.fulfillment.data;
       let action = response.result.action;
+      if (isDefined(responseData) && isDefined(responseData.wechat)) {
+        console.log('Response Data: ', responseData.wechat)
+        reply(responseData.wechat)
+        return
+      }
       console.log('Response Text: ', responseText);
       if (action == "input.unknown") {
         res.transfer2CustomerService()
