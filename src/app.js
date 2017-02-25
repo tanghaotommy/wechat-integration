@@ -376,8 +376,8 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       }
       console.log('Response Text: ', responseText);
       if (action == "input.unknown") {
-        res.transfer2CustomerService()
-        return
+        //res.transfer2CustomerService()
+        //return
       }
       res.reply(responseText);
       // res.reply([
