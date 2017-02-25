@@ -260,7 +260,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
     }
     if (message.Event == 'LOCATION') {
 
-      data = {"user_id": message.FromUserName,
+      var data = {"user_id": message.FromUserName,
       "event": "location",
       "latitude": message.Latitude,
       "longitude": message.Longitude
