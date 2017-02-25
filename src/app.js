@@ -1,9 +1,9 @@
 'use strict';
 
-const JSONbig = require('json-bigint');
-const async = require('async');
-const bodyParser = require('body-parser');
-const uuid = require('node-uuid');
+// const JSONbig = require('json-bigint');
+// const async = require('async');
+// const bodyParser = require('body-parser');
+// const uuid = require('node-uuid');
 var app = require('express')();
 var fs = require('fs');
 var http = require('http');
@@ -400,6 +400,18 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
     // 回复高富帅(图文回复)
   }
 }));
+
+function isDefined(obj) {
+    if (typeof obj == 'undefined') {
+        return false;
+    }
+
+    if (!obj) {
+        return false;
+    }
+
+    return obj != null;
+}
 
 //app.listen(80, () => {
 //    console.log('Rest service ready on port ' + 443);
