@@ -1,4 +1,9 @@
+'use strict';
 
+const JSONbig = require('json-bigint');
+const async = require('async');
+const bodyParser = require('body-parser');
+const uuid = require('node-uuid');
 var app = require('express')();
 var fs = require('fs');
 var http = require('http');
