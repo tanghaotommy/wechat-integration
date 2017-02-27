@@ -255,7 +255,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
   }
   if (message.MsgType == 'event') {
     if (message.Event == 'subscribe') {
-      responseText = "Hi，我是智能机器人，你的餐馆推荐小助手。目前可以根据你的喜好为你推荐南加州的中餐馆！\n你可以这样问我：有什么推荐的中餐馆？";
+      var responseText = "Hi，我是智能机器人，你的餐馆推荐小助手。目前可以根据你的喜好为你推荐南加州的中餐馆！\n你可以这样问我：有什么推荐的中餐馆？";
       res.reply(responseText);
     }
     if (message.Event == 'LOCATION') {
