@@ -172,7 +172,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
       console.log('location message: ', message.Label);   
       var longitude = message.Location_Y;
       var latitude = message.Location_X
-      var text = "我在" + String(latitude) + " " + String(longitude)
+      var text = String(latitude) + " " + String(longitude)
       let apiaiRequest = apiAiService.textRequest(text,
       {
         sessionId: message.FromUserName
