@@ -11,6 +11,7 @@ var https = require('https');
 var privateKey  = fs.readFileSync('./path/to/private.pem', 'utf8');
 var certificate = fs.readFileSync('./path/to/file.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
+var utf8 = require('utf8');
 
 var express = require('express');
 var app = express();
@@ -27,8 +28,9 @@ var service_config = {
 };
 
 const APIAI_ACCESS_TOKEN = 'a6b6b7d1db4f4a999bd5f7f862aa80ae';
-const apiai = require("../module/apiai");
-const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: 'en', requestSource: "fb"});
+//const apiai = require("../module/apiai");
+const apiai = require('apiai');
+const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: 'zh-CN', requestSource: "fb"});
 
 app.use(express.query());
 app.get('/', function (req, res) {
@@ -364,6 +366,7 @@ app.use('/wechat_service', wechat(service_config, function (req, res, next) {
 
   if (message.MsgType == 'text') {
     var text = message.Content;
+    
     console.log('text message: ', message.Content);
     let apiaiRequest = apiAiService.textRequest(text,
     {
